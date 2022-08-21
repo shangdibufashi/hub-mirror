@@ -24,7 +24,19 @@ var (
 	outputPath = pflag.StringP("outputPath", "", "output.sh", "结果输出路径")
 	repository = pflag.StringP("repository", "", "", "仓库地址,如果为空,默认推到dockerHub")
 )
-
+func FormatName(repository string, str string) string{
+	arr := strings.Split(str, "/")
+	hasDot := strings.Index(arr[0], ".") != -1
+	tagName := "docker.io"
+	version := strings.Join(arr, ".")
+	if (hasDot) {
+		tagName = arr[0]
+		version = strings.Join(arr[1:], ".")
+	}
+	version = strings.ReplaceAll(version, ":", "_")
+	results := repository + "/" + tagName + ":" + version
+	return results
+}
 func main() {
 	pflag.Parse()
 
@@ -83,9 +95,11 @@ func main() {
 		// 如果为空,默认推送到 DockerHub 用户名 下
 		// 如果指定了值,则推动到指定的仓库下,用户名不一定与repository后缀相同
 		if *repository == "" {
-			target = *username + "/" + strings.ReplaceAll(source, "/", "__")
+// 			target = *username + "/" + strings.ReplaceAll(source, "/", "__")
+			target = FormatName(*username,source)
 		} else {
-			target = *repository + "/" + strings.ReplaceAll(source, "/", "__")
+// 			target = *repository + "/" + strings.ReplaceAll(source, "/", "__")
+			target = FormatName(*repository,source)
 		}
 
 		wg.Add(1)
