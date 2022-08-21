@@ -83,9 +83,9 @@ func main() {
 		// 如果为空,默认推送到 DockerHub 用户名 下
 		// 如果指定了值,则推动到指定的仓库下,用户名不一定与repository后缀相同
 		if *repository == "" {
-			target = *username + "/" + strings.ReplaceAll(source, "/", "_")
+			target = *username + "/" + strings.ReplaceAll(source, "/", "__")
 		} else {
-			target = *repository + "/" + strings.ReplaceAll(source, "/", "_")
+			target = *repository + "/" + strings.ReplaceAll(source, "/", "__")
 		}
 
 		wg.Add(1)
